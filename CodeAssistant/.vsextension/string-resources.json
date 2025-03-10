@@ -1,0 +1,8 @@
+{
+  "CodeAssistant.DisplayName": "CodeAssistant",
+  "InsertGuidCommand.DisplayName": "Insert new guid",
+  "IndentChars.DisplayName": "IndentChars",
+  "NewLineOnAttributes.DisplayName": "NewLineOnAttributes",
+  "AddEmptyLineBetweenGroups.DisplayName": "AddEmptyLineBetweenGroups"
+
+}

@@ -1,0 +1,7 @@
+{
+  "CodeAssistant.DisplayName": "CodeAssistant",
+  "InsertGuidCommand.DisplayName": "插入GUID",
+  "IndentChars.DisplayName": "对齐字符",
+  "NewLineOnAttributes.DisplayName": "属性换行",
+  "AddEmptyLineBetweenGroups.DisplayName": "在Groups中增加空行"
+}
