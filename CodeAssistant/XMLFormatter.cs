@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using Newtonsoft.Json.Linq;
+
+using System.Text;
 using System.Xml.Linq;
 
 namespace CodeAssistant;
@@ -46,25 +48,42 @@ public static class CSprojFormatter
     private static void FormatAttributes(XElement element, int depth, XmlFormatSettings settings, StringBuilder output)
     {
         var attributes = element.Attributes().ToList();
+        string baseIndent = new string(' ', depth * settings.IndentChars.Length + 2);
 
         for (int i = 0; i < attributes.Count; i++)
         {
             //属性值
             var attr = attributes[i];
-            //var
-            //多属性不用换行
-            string attrIndent = "";
-            if (settings.NewLineOnAttributes)
-            {
-                attrIndent = i == 0 ? " " : $"{Environment.NewLine}{new string(' ', depth * settings.IndentChars.Length + 2)}";
-            }
-            else
-            {
-                attrIndent = " ";
-            }
+            bool isCommand = attr.Name.LocalName == "Command";
+            string attrIndent = settings.NewLineOnAttributes
+                ? (i == 0 ? " " : $"{Environment.NewLine}{baseIndent}")
+                : " ";
 
-            output.Append($"{attrIndent}{attr.Name.LocalName}=\"{attr.Value}\"");
+            // 处理Command属性的特殊换行
+            string processedValue = isCommand
+                ? ProcessCommandAttribute(attr, depth + 1, settings.IndentChars)
+                : attr.Value;
+
+            output.Append($"{attrIndent}{attr.Name.LocalName}=\"{processedValue}\"");
         }
+    }
+
+    private static string ProcessCommandAttribute(XAttribute attr, int depth, string indentChars)
+    {
+        // 获取原始XML属性文本（例如：Command="echo hello&#xD;&#xA;echo world"）
+        var rawAttribute = attr.ToString();
+
+        // 提取未解码的值部分（保留字符实体）
+        var valueStart = rawAttribute.IndexOf('"') + 1;
+        var valueEnd = rawAttribute.LastIndexOf('"');
+        var rawValue = rawAttribute.Substring(valueStart, valueEnd - valueStart);
+
+        // 处理换行实体
+        string lineIndent = new string(' ', depth * indentChars.Length);
+        return rawValue.Replace("&#xD;&#xA;", $"&#xD;&#xA;{Environment.NewLine}{lineIndent}");
+
+    
+        
     }
 
     private static void FormatContent(XElement element, int depth, XmlFormatSettings settings, StringBuilder output)
