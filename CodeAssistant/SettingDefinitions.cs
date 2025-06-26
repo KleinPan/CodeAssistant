@@ -21,11 +21,11 @@ internal static class SettingDefinitions
     };
 
     [VisualStudioContribution]
-    public static Setting.String IndentCharsSetting { get; } = new("IndentChars", "%IndentChars.DisplayName%", ChildCategory, defaultValue: "  ");
+    public static Setting.String IndentCharsSetting { get; } = new("indentChars", "%IndentChars.DisplayName%", ChildCategory, defaultValue: "  ");
 
     [VisualStudioContribution]
-    public static Setting.Boolean NewLineOnAttributesSetting { get; } = new("NewLineOnAttributes", "%NewLineOnAttributes.DisplayName%", ChildCategory, defaultValue: false);
+    public static Setting.Boolean NewLineOnAttributesSetting { get; } = new("newLineOnAttributes", "%NewLineOnAttributes.DisplayName%", ChildCategory, defaultValue: false);
 
     [VisualStudioContribution]
-    public static Setting.Boolean AddEmptyLineBetweenGroupsSetting { get; } = new("AddEmptyLineBetweenGroups", "%AddEmptyLineBetweenGroups.DisplayName%", ChildCategory, defaultValue: false);
+    public static Setting.Boolean AddEmptyLineBetweenGroupsSetting { get; } = new("addEmptyLineBetweenGroups", "%AddEmptyLineBetweenGroups.DisplayName%", ChildCategory, defaultValue: false);
 }

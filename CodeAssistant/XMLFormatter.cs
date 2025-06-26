@@ -81,9 +81,6 @@ public static class CSprojFormatter
         // 处理换行实体
         string lineIndent = new string(' ', depth * indentChars.Length);
         return rawValue.Replace("&#xD;&#xA;", $"&#xD;&#xA;{Environment.NewLine}{lineIndent}");
-
-    
-        
     }
 
     private static void FormatContent(XElement element, int depth, XmlFormatSettings settings, StringBuilder output)
@@ -133,7 +130,9 @@ public static class CSprojFormatter
 /// <summary>基础格式</summary>
 public class XmlFormatSettings
 {
-    /// <summary>是否保留元素Value文本中的换行</summary>
+    /// <summary>
+    /// 是否保留元素Value文本中的换行
+    /// </summary>
     public bool PreserveElementValueNewLines { get; set; } = false;
 
     /// <summary>缩进字符</summary>

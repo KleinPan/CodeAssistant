@@ -74,6 +74,7 @@ internal class MyToolWindowVM : NotifyPropertyChangedObject
     [DataMember]
     public AsyncCommand ReadCommand { get; }
 
+    
     [DataMember]
     public AsyncCommand SaveCommand { get; }
 

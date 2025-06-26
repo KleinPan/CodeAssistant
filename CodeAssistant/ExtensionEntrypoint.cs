@@ -5,9 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.Extensibility;
 using Microsoft.VisualStudio.Extensibility.Commands;
 using Microsoft.VisualStudio.Extensibility.Documents;
-using Microsoft.VisualStudio.ProjectSystem.Query;
-
-using System.Threading;
 
 #pragma warning disable VSEXTPREVIEW_SETTINGS
 #pragma warning disable VSEXTPREVIEW_OUTPUTWINDOW
@@ -41,6 +38,8 @@ public class ExtensionEntrypoint : Extension
         serviceCollection.AddSingleton<MyToolWindowVM>();
         serviceCollection.AddSingleton<ConfigService>();
         base.InitializeServices(serviceCollection);
+
+
     }
 
     [VisualStudioContribution]
@@ -52,9 +51,10 @@ public class ExtensionEntrypoint : Extension
         },
         Children = new[]
         {
+            MenuChild.Command<MyToolWindowCommand>(),
             MenuChild.Command<InsertGuidCommand>(),
             MenuChild.Command<FormatCSProjCommand>(),
-            MenuChild.Command<MyToolWindowCommand>(),
+            MenuChild.Command<FormatCommentCommand>(),
         },
     };
 }
