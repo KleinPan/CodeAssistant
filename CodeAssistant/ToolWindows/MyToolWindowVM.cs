@@ -71,7 +71,7 @@ internal class MyToolWindowVM : NotifyPropertyChangedObject
         //this.NewLineOnAttributesSetting = snapshot.NewLineOnAttributesSetting.ValueOrDefault(SettingDefinitions.NewLineOnAttributesSetting.DefaultValue);
         //this.AddEmptyLineBetweenGroupsSetting = snapshot.AddEmptyLineBetweenGroupsSetting.ValueOrDefault(SettingDefinitions.AddEmptyLineBetweenGroupsSetting.DefaultValue);
 
-        var res = snapshot.IndentCharsSetting.ValueOrDefault(SettingDefinitions.AllConfig.DefaultValue);
+        //var res = snapshot.IndentCharsSetting.ValueOrDefault(SettingDefinitions.AllConfig.DefaultValue);
         return Task.CompletedTask;
     }
 
