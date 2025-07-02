@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using CodeAssistant.Settings;
 
 using System.Text;
 using System.Xml.Linq;
@@ -7,7 +7,7 @@ namespace CodeAssistant;
 
 public static class CSprojFormatter
 {
-    public static string Format(string xml, XmlFormatSettings settings)
+    public static string Format(string xml, CSProjFormatSettings settings)
     {
         var doc = XDocument.Parse(xml, LoadOptions.PreserveWhitespace);
         var output = new StringBuilder();
@@ -15,7 +15,7 @@ public static class CSprojFormatter
         return output.ToString().TrimStart();
     }
 
-    private static void FormatNode(XElement element, int depth, XmlFormatSettings settings, StringBuilder output)
+    private static void FormatNode(XElement element, int depth, CSProjFormatSettings settings, StringBuilder output)
     {
         //缩进
         var indent = new string(' ', depth * settings.IndentChars.Length);
@@ -45,7 +45,7 @@ public static class CSprojFormatter
         AddElementNewLine(element, settings, output);
     }
 
-    private static void FormatAttributes(XElement element, int depth, XmlFormatSettings settings, StringBuilder output)
+    private static void FormatAttributes(XElement element, int depth, CSProjFormatSettings settings, StringBuilder output)
     {
         var attributes = element.Attributes().ToList();
         string baseIndent = new string(' ', depth * settings.IndentChars.Length + 2);
@@ -83,7 +83,7 @@ public static class CSprojFormatter
         return rawValue.Replace("&#xD;&#xA;", $"&#xD;&#xA;{Environment.NewLine}{lineIndent}");
     }
 
-    private static void FormatContent(XElement element, int depth, XmlFormatSettings settings, StringBuilder output)
+    private static void FormatContent(XElement element, int depth, CSProjFormatSettings settings, StringBuilder output)
     {
         output.Append('>');
 
@@ -114,7 +114,7 @@ public static class CSprojFormatter
         output.Append($"</{element.Name}>");
     }
 
-    private static void AddElementNewLine(XElement element, XmlFormatSettings settings, StringBuilder output)
+    private static void AddElementNewLine(XElement element, CSProjFormatSettings settings, StringBuilder output)
     {
         if (settings.AddEmptyLineBetweenGroups && settings.ElementsWithNewLine.Contains(element.Name.LocalName))
         {
@@ -125,37 +125,4 @@ public static class CSprojFormatter
             output.AppendLine();
         }
     }
-}
-
-/// <summary>基础格式</summary>
-public class XmlFormatSettings
-{
-    /// <summary>
-    /// 是否保留元素Value文本中的换行
-    /// </summary>
-    public bool PreserveElementValueNewLines { get; set; } = false;
-
-    /// <summary>缩进字符</summary>
-    public string IndentChars { get; set; } = "  ";
-
-    /// <summary>属性换行</summary>
-    public bool NewLineOnAttributes { get; set; } = false;
-
-    /// <summary> 在<ItemGroup>等元素间添加空行 </summary>
-    public bool AddEmptyLineBetweenGroups { get; set; } = true;
-
-    /// <summary>展开空元素（如 <ItemGroup/> → <ItemGroup></ItemGroup>）</summary>
-    public bool ExpandEmptyElements { get; set; } = false;
-
-    /// <summary>特定元素处理</summary>
-    public HashSet<string> ElementsWithAttributeAlignment { get; } = new()
-    {
-        "PackageReference", "ProjectReference", "Reference"
-    };
-
-    /// <summary>特定元素处理</summary>
-    public HashSet<string> ElementsWithNewLine { get; } = new()
-    {
-        "ItemGroup", "PropertyGroup"
-    };
 }

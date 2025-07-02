@@ -4,7 +4,9 @@
   "IndentChars.DisplayName": "IndentChars",
   "NewLineOnAttributes.DisplayName": "NewLineOnAttributes",
   "AddEmptyLineBetweenGroups.DisplayName": "AddEmptyLineBetweenGroups",
-  
-
-
+  "AllConfig.DisplayName": "AllConfig",
+  "ParentCategory.DisplayName": "ParentCategory",
+  "ChildCategory.DisplayName": "ChildCategory",
+  "MultiSummaryToSingle": "MultiSummaryToSingle",
+  "WithSpace":"WithSpace"
 }

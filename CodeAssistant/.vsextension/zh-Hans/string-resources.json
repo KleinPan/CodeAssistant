@@ -3,5 +3,10 @@
   "InsertGuidCommand.DisplayName": "插入GUID",
   "IndentChars.DisplayName": "对齐字符",
   "NewLineOnAttributes.DisplayName": "属性换行",
-  "AddEmptyLineBetweenGroups.DisplayName": "在Groups中增加空行"
+  "AddEmptyLineBetweenGroups.DisplayName": "在Groups中增加空行",
+  "AllConfig.DisplayName": "所有配置",
+  "ParentCategory.DisplayName": "父目录",
+  "ChildCategory.DisplayName": "子目录",
+  "MultiSummaryToSingle": "多行Summary到单行",
+  "WithSpace": "带空格"
 }

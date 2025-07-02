@@ -54,7 +54,7 @@ internal class FormatCSProjCommand : Command
         using var textView = await context.GetActiveTextViewAsync(cancellationToken);
         if (textView is null)
         {
-            this.logger.TraceInformation("There was no active text view when command is executed.");
+            ExtensionEntrypoint.WriteToOutputWindowAsync("There was no active text view when command is executed.");
             return;
         }
 
@@ -68,16 +68,16 @@ internal class FormatCSProjCommand : Command
 
               try
               {
-                  var settings = ConfigService.GetXMLSettings(cancellationToken).Result;
-                  var newContent = CSprojFormatter.Format(oldCOntent, settings);
+                  var settings = ConfigService.GetAllSettingsAsync(cancellationToken).Result;
+                  var newContent = CSprojFormatter.Format(oldCOntent, settings.CSProjFormatSettings);
 
                   editor.Replace(old, newContent);
               }
               catch (Exception ex)
               {
-                  ExtensionEntrypoint.outputChannel?.WriteLineAsync("This is a test of the output channel.").Wait();
+                  ExtensionEntrypoint.WriteToOutputWindowAsync("This is a test of the output channel.").Wait();
 
-                  this.logger.TraceInformation(ex.ToString());
+                  ExtensionEntrypoint.WriteToOutputWindowAsync(ex.ToString());
               }
           },
           cancellationToken);

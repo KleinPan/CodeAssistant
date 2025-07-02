@@ -63,29 +63,17 @@
             </Style.Triggers>
         </Style>
     </DataTemplate.Resources>
-    <TabControl>
-        <TabItem Header="FormatCSProj">
-            <Grid>
+    <Grid>
+        <Grid.RowDefinitions>
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
 
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="auto" />
-                </Grid.RowDefinitions>
+        </Grid.RowDefinitions>
+        <TabControl>
 
-                <Button Grid.Column="2"
-                        Command="{Binding TestCommand}"
-                        CommandParameter="{Binding Name}"
-                        Content="Test"
-                        IsEnabled="{Binding HelloCommand.RunningCommandsCount.IsZero}" />
-
-                <Grid Grid.Row="1" Grid.ColumnSpan="3">
+            <TabItem Header="FormatComment">
+                <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="3*" />
                         <ColumnDefinition Width="5*" />
@@ -96,27 +84,81 @@
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <Label Margin="5" Content="IndentChars:" />
-                    <TextBox Grid.Column="1" Margin="5" VerticalContentAlignment="Center" Text="{Binding IndentCharsSetting}" />
-                    <Label Grid.Row="1" Margin="5" Content="NewLineOnAttributes:" />
-                    <CheckBox Grid.Row="1" Grid.Column="1" Margin="5" VerticalAlignment="Center"
-                              IsChecked="{Binding NewLineOnAttributesSetting}" />
-                    <Label Grid.Row="2" Margin="5" Content="AddEmptyLineBetweenGroups:" />
-                    <CheckBox Grid.Row="2" Grid.Column="1" Margin="5" VerticalAlignment="Center"
-                              IsChecked="{Binding AddEmptyLineBetweenGroupsSetting}" />
-                </Grid>
-                <Grid Grid.Row="2" Grid.ColumnSpan="3">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition Width="auto" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="{Binding Text}" />
-                    <Button HorizontalAlignment="Right" Command="{Binding SaveCommand}" Content="Save" />
-                </Grid>
 
-            </Grid>
-        </TabItem>
-        <TabItem Header="FormatComment" />
-    </TabControl>
+                    <Label Grid.Row="1" Margin="5" Content="WithSpace:" />
+
+                    <CheckBox Grid.Row="1" Grid.Column="1" Margin="5" VerticalAlignment="Center"
+                              IsChecked="{Binding WithSpace}" />
+
+                    <Label Grid.Row="2" Margin="5" Content="MultiSummaryToSingle" />
+
+                    <CheckBox Grid.Row="2" Grid.Column="1" Margin="5" VerticalAlignment="Center"
+                              IsChecked="{Binding MultiSummaryToSingle}" />
+
+                </Grid>
+            </TabItem>
+            <TabItem Header="FormatCSProj">
+                <Grid>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+
+
+                    <Grid Grid.Row="1" Grid.ColumnSpan="3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3*" />
+                            <ColumnDefinition Width="5*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Label Margin="5" Content="IndentChars:" />
+                        <TextBox Grid.Column="1" Margin="5" VerticalContentAlignment="Center" Text="{Binding IndentCharsSetting}" />
+                        <Label Grid.Row="1" Margin="5" Content="NewLineOnAttributes:" />
+
+                        <CheckBox Grid.Row="1" Grid.Column="1" Margin="5" VerticalAlignment="Center"
+                                  IsChecked="{Binding NewLineOnAttributesSetting}" />
+                        <Label Grid.Row="2" Margin="5" Content="AddEmptyLineBetweenGroups:" />
+                        <CheckBox Grid.Row="2" Grid.Column="1" Margin="5" VerticalAlignment="Center"
+                                  IsChecked="{Binding AddEmptyLineBetweenGroupsSetting}" />
+
+                        <CheckBox Grid.Row="2" Grid.Column="1" Margin="5" VerticalAlignment="Center"
+                                  IsChecked="{Binding IndentCharsSetting}" />
+                    </Grid>
+
+
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="{Binding Text}" />
+
+            <Button Grid.Column="1"
+                    Command="{Binding TestCommand}"
+                    CommandParameter="{Binding Name}"
+                    Content="Test"
+                    IsEnabled="{Binding HelloCommand.RunningCommandsCount.IsZero}" />
+
+            <Button Grid.Column="2" HorizontalAlignment="Right" Command="{Binding SaveCommand}" Content="Save" />
+        </Grid>
+    </Grid>
+
 
 </DataTemplate>

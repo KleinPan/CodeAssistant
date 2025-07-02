@@ -26,10 +26,11 @@ public class ExtensionEntrypoint : Extension
                 description: "This is a code assistant,include some code formate functions..."),
     };
 
-    protected override Task OnInitializedAsync(VisualStudioExtensibility extensibility, CancellationToken cancellationToken)
+    protected override async Task OnInitializedAsync(VisualStudioExtensibility extensibility, CancellationToken cancellationToken)
     {
-        outputChannel = extensibility.Views().Output.CreateOutputChannelAsync("%CodeAssistant.DisplayName%", cancellationToken).Result;
-        return base.OnInitializedAsync(extensibility, cancellationToken);
+        outputChannel = await extensibility.Views().Output.CreateOutputChannelAsync("%CodeAssistant.DisplayName%", cancellationToken);
+        await base.OnInitializedAsync(extensibility, cancellationToken);
+        return;
     }
 
     protected override void InitializeServices(IServiceCollection serviceCollection)
@@ -38,8 +39,11 @@ public class ExtensionEntrypoint : Extension
         serviceCollection.AddSingleton<MyToolWindowVM>();
         serviceCollection.AddSingleton<ConfigService>();
         base.InitializeServices(serviceCollection);
+    }
 
-
+    public static async Task WriteToOutputWindowAsync(string message)
+    {
+        await outputChannel?.WriteLineAsync($"{message}");
     }
 
     [VisualStudioContribution]
@@ -54,7 +58,7 @@ public class ExtensionEntrypoint : Extension
             MenuChild.Command<MyToolWindowCommand>(),
             MenuChild.Command<InsertGuidCommand>(),
             MenuChild.Command<FormatCSProjCommand>(),
-            MenuChild.Command<FormatCommentCommand>(),
+            MenuChild.Command<FormatCodeCommand>(),
         },
     };
 }

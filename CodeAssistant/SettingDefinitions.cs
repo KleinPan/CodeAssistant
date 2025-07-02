@@ -9,23 +9,23 @@ namespace CodeAssistant;
 internal static class SettingDefinitions
 {
     [VisualStudioContribution]
-    public static SettingCategory ParentCategory { get; } = new("parentCategory", "Parent Category")
+    public static SettingCategory ParentCategory { get; } = new("parentCategory", "%ParentCategory.DisplayName%")
     {
         GenerateObserverClass = true,
     };
 
     [VisualStudioContribution]
-    public static SettingCategory ChildCategory { get; } = new("childCategory", "Child Category", ParentCategory)
+    public static SettingCategory ChildCategory { get; } = new("childCategory", "%ChildCategory.DisplayName%", ParentCategory)
     {
         GenerateObserverClass = true,
     };
 
     [VisualStudioContribution]
-    public static Setting.String IndentCharsSetting { get; } = new("indentChars", "%IndentChars.DisplayName%", ChildCategory, defaultValue: "  ");
+    public static Setting.String AllConfig { get; } = new("allConfig", "%AllConfig.DisplayName%", ParentCategory, defaultValue: "");
 
     [VisualStudioContribution]
-    public static Setting.Boolean NewLineOnAttributesSetting { get; } = new("newLineOnAttributes", "%NewLineOnAttributes.DisplayName%", ChildCategory, defaultValue: false);
+    public static Setting.Boolean MultiSummaryToSingle { get; } = new("multiSummaryToSingle", "%AllConfig.MultiSummaryToSingle%", ParentCategory, defaultValue: true);
 
     [VisualStudioContribution]
-    public static Setting.Boolean AddEmptyLineBetweenGroupsSetting { get; } = new("addEmptyLineBetweenGroups", "%AddEmptyLineBetweenGroups.DisplayName%", ChildCategory, defaultValue: false);
+    public static Setting.Boolean WithSpace { get; } = new("withSpace", "%WithSpace.DisplayName%", ParentCategory, defaultValue: true);
 }

@@ -16,12 +16,12 @@ namespace CodeAssistant;
 
 /// <summary>FormatCSProj handler.</summary>
 [VisualStudioContribution]
-internal class FormatCommentCommand : Command
+internal class FormatCodeCommand : Command
 {
     private readonly TraceSource logger;
     private ConfigService ConfigService;
 
-    public FormatCommentCommand(TraceSource traceSource, ConfigService configService)
+    public FormatCodeCommand(TraceSource traceSource, ConfigService configService)
     {
         // This optional TraceSource can be used for logging in the command. You can use dependency
         // injection to access other services here as well.
@@ -31,14 +31,14 @@ internal class FormatCommentCommand : Command
     }
 
     /// <inheritdoc/>
-    public override CommandConfiguration CommandConfiguration => new(displayName: "FormatComment")
+    public override CommandConfiguration CommandConfiguration => new(displayName: "FormatCode")
     {
         // Use this object initializer to set optional parameters for the command. The required
         // parameter, displayName, is set above. To localize the displayName, add an entry in
         // .vsextension\string-resources.json and reference it here by passing
         // "%CodeAssistant.FormatCSProj.DisplayName%" as a constructor parameter.
         //Placements = [CommandPlacement.KnownPlacements.ExtensionsMenu],
-        Icon = new(ImageMoniker.KnownValues.FormatDocument, IconSettings.IconAndText),
+        Icon = new(ImageMoniker.KnownValues.CodeInformation, IconSettings.IconAndText),
     };
 
     /// <inheritdoc/>
@@ -90,8 +90,8 @@ internal class FormatCommentCommand : Command
               }
               catch (Exception ex)
               {
-                  ExtensionEntrypoint.outputChannel?.WriteLineAsync($"Error processing comments: {ex.Message}").Wait();
-                  this.logger.TraceInformation(ex.ToString());
+                  ExtensionEntrypoint.WriteToOutputWindowAsync($"Error processing comments: {ex.Message}").Wait();
+                  ExtensionEntrypoint.WriteToOutputWindowAsync(ex.ToString()).Wait();
               }
           },
           cancellationToken);

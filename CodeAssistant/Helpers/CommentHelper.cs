@@ -6,8 +6,6 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace CodeAssistant.Helpers;
 
-
-
 internal class CommentHelper
 {
     private CommentSetting CommentSetting = new CommentSetting();
@@ -77,9 +75,7 @@ internal class CommentHelper
         return replacements;
     }
 
-    /// <summary>
-    /// 查找summary开始标签在文本中的位置
-    /// </summary>
+    /// <summary>查找summary开始标签在文本中的位置</summary>
     /// <param name="commentText"></param>
     /// <returns></returns>
     private static int FindStartSummaryIndex(string commentText, string findString = "<summary>")
@@ -98,9 +94,7 @@ internal class CommentHelper
         return -1; // 未找到
     }
 
-    /// <summary>
-    /// 查找summary结束标签在文本中的位置
-    /// </summary>
+    /// <summary>查找summary结束标签在文本中的位置</summary>
     /// <param name="commentText"></param>
     /// <returns></returns>
     private static int FindEndSummaryIndex(string commentText, string findString = "</summary>")
