@@ -11,3 +11,7 @@
  + 更新到1.2.0版本；
  + 整理设置相关代码；
  + 优化配置页面；
+
+# 参考文档
+ + https://github.com/microsoft/VSExtensibility/tree/main
+ + https://learn.microsoft.com/zh-cn/visualstudio/extensibility/visualstudio.extensibility/?view=visualstudio
