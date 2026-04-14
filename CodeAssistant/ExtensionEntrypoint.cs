@@ -57,8 +57,17 @@ public class ExtensionEntrypoint : Extension
         {
             MenuChild.Command<MyToolWindowCommand>(),
             MenuChild.Command<InsertGuidCommand>(),
-            MenuChild.Command<FormatCSProjCommand>(),
             MenuChild.Command<FormatCodeCommand>(),
         },
     };
+
+    [VisualStudioContribution]
+    public static ToolbarConfiguration CodeAssistantToolbar =>
+        new("%CodeAssistant.DisplayName%")
+        {
+            Children =
+            [
+                ToolbarChild.Command<FormatCodeCommand>(),
+            ]
+        };
 }

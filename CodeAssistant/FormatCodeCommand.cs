@@ -2,7 +2,6 @@
 using CodeAssistant.Services;
 
 using Microsoft;
-using Microsoft.CodeAnalysis.CSharp;
 
 using Microsoft.VisualStudio.Extensibility;
 using Microsoft.VisualStudio.Extensibility.Commands;
@@ -13,6 +12,8 @@ using System.Diagnostics;
 #pragma warning disable VSEXTPREVIEW_OUTPUTWINDOW // The settings API is currently in preview and marked as experimental
 
 namespace CodeAssistant;
+
+//https://learn.microsoft.com/zh-cn/visualstudio/extensibility/visualstudio.extensibility/editor/editor-concepts?view=visualstudio
 
 /// <summary>FormatCSProj handler.</summary>
 [VisualStudioContribution]
@@ -38,7 +39,7 @@ internal class FormatCodeCommand : Command
         // .vsextension\string-resources.json and reference it here by passing
         // "%CodeAssistant.FormatCSProj.DisplayName%" as a constructor parameter.
         //Placements = [CommandPlacement.KnownPlacements.ExtensionsMenu],
-        Icon = new(ImageMoniker.KnownValues.CodeInformation, IconSettings.IconAndText),
+        Icon = new(ImageMoniker.KnownValues.CleanData, IconSettings.None),
     };
 
     /// <inheritdoc/>
@@ -62,38 +63,40 @@ internal class FormatCodeCommand : Command
             return;
         }
 
-        await this.Extensibility.Editor().EditAsync(
-               batch =>
-          {
-              ITextDocumentEditor editor = textView.Document.AsEditable(batch);
+        await this.Extensibility.Editor().EditAsync(batch =>
+        {
+            //获取 Roslyn Document
+            ITextDocumentEditor editor = textView.Document.AsEditable(batch);
 
-              var oldText = textView.Document.Text;
-              var oldContent = oldText.CopyToString();
+            var oldText = textView.Document.Text;
+            var oldContent = oldText.CopyToString();
 
-              try
-              {
-                  // 解析代码文档
-                  var tree = CSharpSyntaxTree.ParseText(oldContent);
-                  var root = tree.GetCompilationUnitRoot(cancellationToken);
+            try
+            {
+                var settings = ConfigService.GetAllSettingsAsync(cancellationToken).Result;
 
-                  // 创建注释处理器并执行处理
-                  var processor = new CommentHelper();
-                  var replacements = processor.ProcessMultiSummary(root);
+                var newText = FileTypeHelper.GetFileExtension(textView) switch
+                {
+                    ".cs" => FormatHelper.CodeFormat(oldContent),
+                    ".csproj" => FormatHelper.CSProjFormat(oldContent, settings.CSProjFormatSettings),
 
-                  // 处理完后应用替换
-                  foreach (var replacement in replacements)
-                  {
-                      TextRange aa = new(new TextPosition(oldText.Document, replacement.Start), new TextPosition(oldText.Document, replacement.End));
-                      // 应用文本替换
-                      editor.Replace(aa, replacement.NewText);
-                  }
-              }
-              catch (Exception ex)
-              {
-                  ExtensionEntrypoint.WriteToOutputWindowAsync($"Error processing comments: {ex.Message}").Wait();
-                  ExtensionEntrypoint.WriteToOutputWindowAsync(ex.ToString()).Wait();
-              }
-          },
-          cancellationToken);
+                    _ => oldContent
+                };
+
+                var fullRange = new TextRange(
+                    new TextPosition(oldText.Document, 0),
+                    new TextPosition(oldText.Document, oldContent.Length));
+
+                editor.Replace(fullRange, newText);
+            }
+            catch (Exception ex)
+            {
+                //更改插入点位置或从扩展中选择文本
+                //var caret = textView.Selection.Extent.Start;
+                //textView.AsEditable(batch).SetSelections([new Selection(activePosition: caret, anchorPosition: caret, insertionPosition: caret)]);
+                ExtensionEntrypoint.WriteToOutputWindowAsync($"Error processing comments: {ex.Message}").Wait();
+                ExtensionEntrypoint.WriteToOutputWindowAsync(ex.ToString()).Wait();
+            }
+        }, cancellationToken);
     }
 }

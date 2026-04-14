@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.Extensibility.Settings;
 namespace CodeAssistant;
 #pragma warning disable VSEXTPREVIEW_SETTINGS // The settings API is currently in preview and marked as experimental
 
-/// <summary>暂时不能用</summary>
+///<summary> 暂时不能用 </summary>
 internal static class SettingDefinitions
 {
     [VisualStudioContribution]
