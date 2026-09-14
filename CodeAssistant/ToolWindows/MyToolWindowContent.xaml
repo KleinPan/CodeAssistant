@@ -7,22 +7,20 @@
         <Style BasedOn="{StaticResource {x:Static styles:VsResourceKeys.TextBoxStyleKey}}" TargetType="TextBox" />
         <Style BasedOn="{StaticResource {x:Static styles:VsResourceKeys.ButtonStyleKey}}" TargetType="Button" />
 
-
         <Style TargetType="TextBlock">
             <Setter Property="Foreground" Value="{DynamicResource {x:Static styles:VsBrushes.WindowTextKey}}" />
         </Style>
         <Style TargetType="TabControl">
             <Setter Property="Background" Value="{DynamicResource {x:Static styles:VsBrushes.BackgroundKey}}" />
-
         </Style>
         <Style TargetType="{x:Type TabItem}">
-
             <Setter Property="Background" Value="{DynamicResource {x:Static styles:VsBrushes.BackgroundKey}}" />
-
             <Setter Property="HeaderTemplate">
                 <Setter.Value>
                     <DataTemplate>
-                        <TextBlock Background="{Binding Path=Background, RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}" Foreground="{DynamicResource {x:Static styles:VsBrushes.WindowTextKey}}" Text="{Binding}" />
+                        <TextBlock Background="{Binding Path=Background, RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}"
+                                   Foreground="{DynamicResource {x:Static styles:VsBrushes.WindowTextKey}}"
+                                   Text="{Binding}" />
                     </DataTemplate>
                 </Setter.Value>
             </Setter>
@@ -37,7 +35,8 @@
                                     CornerRadius="4,4,0,0">
                                 <ContentPresenter x:Name="ContentSite"
                                                   Margin="{TemplateBinding Padding}"
-                                                  HorizontalAlignment="Center" VerticalAlignment="Center" ContentSource="Header" />
+                                                  HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                  ContentSource="Header" />
                             </Border>
                         </Grid>
                         <ControlTemplate.Triggers>
@@ -45,34 +44,52 @@
                                 <Setter TargetName="Border" Property="Background" Value="{DynamicResource {x:Static styles:VsBrushes.BackgroundKey}}" />
                                 <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource {x:Static styles:VsBrushes.ActiveBorderKey}}" />
                                 <Setter TargetName="Border" Property="BorderThickness" Value="1,1,1,0" />
-
                                 <Setter Property="Panel.ZIndex" Value="100" />
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="Border" Property="Background" Value="{DynamicResource {x:Static styles:VsBrushes.BackgroundKey}}" />
                             </Trigger>
-
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-            <!--  定义选中状态的样式  -->
             <Style.Triggers>
                 <Trigger Property="IsSelected" Value="True" />
                 <Trigger Property="IsMouseOver" Value="True" />
             </Style.Triggers>
         </Style>
     </DataTemplate.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
-
             <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
-
         </Grid.RowDefinitions>
-        <TabControl>
 
+        <TabControl>
             <TabItem Header="FormatComment">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition Width="5*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Label Grid.Row="0" Margin="5" Content="WithSpace:" />
+                    <CheckBox Grid.Row="0" Grid.Column="1" Margin="5" VerticalAlignment="Center"
+                              IsChecked="{Binding WithSpace}" />
+
+                    <Label Grid.Row="1" Margin="5" Content="MultiSummaryToSingle:" />
+                    <CheckBox Grid.Row="1" Grid.Column="1" Margin="5" VerticalAlignment="Center"
+                              IsChecked="{Binding MultiSummaryToSingle}" />
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="FormatCSProj">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="3*" />
@@ -85,80 +102,41 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
-                    <Label Grid.Row="1" Margin="5" Content="WithSpace:" />
+                    <Label Grid.Row="0" Margin="5" Content="IndentChars:" />
+                    <TextBox Grid.Row="0" Grid.Column="1" Margin="5" VerticalContentAlignment="Center"
+                             Text="{Binding IndentChars, UpdateSourceTrigger=PropertyChanged}" />
 
+                    <Label Grid.Row="1" Margin="5" Content="NewLineOnAttributes:" />
                     <CheckBox Grid.Row="1" Grid.Column="1" Margin="5" VerticalAlignment="Center"
-                              IsChecked="{Binding WithSpace}" />
+                              IsChecked="{Binding NewLineOnAttributes}" />
 
-                    <Label Grid.Row="2" Margin="5" Content="MultiSummaryToSingle" />
-
+                    <Label Grid.Row="2" Margin="5" Content="AddEmptyLineBetweenGroups:" />
                     <CheckBox Grid.Row="2" Grid.Column="1" Margin="5" VerticalAlignment="Center"
-                              IsChecked="{Binding MultiSummaryToSingle}" />
-
-                </Grid>
-            </TabItem>
-            <TabItem Header="FormatCSProj">
-                <Grid>
-
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="auto" />
-                    </Grid.RowDefinitions>
-
-
-                    <Grid Grid.Row="1" Grid.ColumnSpan="3">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="3*" />
-                            <ColumnDefinition Width="5*" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                        <Label Margin="5" Content="IndentChars:" />
-                        <TextBox Grid.Column="1" Margin="5" VerticalContentAlignment="Center" Text="{Binding IndentCharsSetting}" />
-                        <Label Grid.Row="1" Margin="5" Content="NewLineOnAttributes:" />
-
-                        <CheckBox Grid.Row="1" Grid.Column="1" Margin="5" VerticalAlignment="Center"
-                                  IsChecked="{Binding NewLineOnAttributesSetting}" />
-                        <Label Grid.Row="2" Margin="5" Content="AddEmptyLineBetweenGroups:" />
-                        <CheckBox Grid.Row="2" Grid.Column="1" Margin="5" VerticalAlignment="Center"
-                                  IsChecked="{Binding AddEmptyLineBetweenGroupsSetting}" />
-
-                        <CheckBox Grid.Row="2" Grid.Column="1" Margin="5" VerticalAlignment="Center"
-                                  IsChecked="{Binding IndentCharsSetting}" />
-                    </Grid>
-
-
+                              IsChecked="{Binding AddEmptyLineBetweenGroups}" />
                 </Grid>
             </TabItem>
         </TabControl>
+
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
-            <TextBlock Text="{Binding Text}" />
 
-            <Button Grid.Column="1"
-                    Command="{Binding TestCommand}"
-                    CommandParameter="{Binding Name}"
-                    Content="Test"
-                    IsEnabled="{Binding HelloCommand.RunningCommandsCount.IsZero}" />
+            <TextBlock Grid.Column="0" Margin="5,0,0,0" VerticalAlignment="Center"
+                       Text="{Binding Text}" />
 
-            <Button Grid.Column="2" HorizontalAlignment="Right" Command="{Binding SaveCommand}" Content="Save" />
+            <Button Grid.Column="1" Margin="5"
+                    Command="{Binding ReloadCommand}"
+                    Content="Reload"
+                    IsEnabled="{Binding IsIdle}" />
+
+            <Button Grid.Column="2" Margin="5"
+                    Command="{Binding SaveCommand}"
+                    Content="Save"
+                    IsEnabled="{Binding IsIdle}" />
         </Grid>
     </Grid>
-
-
 </DataTemplate>

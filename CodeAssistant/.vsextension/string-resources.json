@@ -1,12 +1,8 @@
 {
   "CodeAssistant.DisplayName": "CodeAssistant",
   "InsertGuidCommand.DisplayName": "Insert new guid",
-  "IndentChars.DisplayName": "IndentChars",
-  "NewLineOnAttributes.DisplayName": "NewLineOnAttributes",
-  "AddEmptyLineBetweenGroups.DisplayName": "AddEmptyLineBetweenGroups",
+  "MyToolWindowCommand.DisplayName": "Show Tool Window",
+  "FormatCodeCommand.DisplayName": "Format Code",
   "AllConfig.DisplayName": "AllConfig",
-  "ParentCategory.DisplayName": "ParentCategory",
-  "ChildCategory.DisplayName": "ChildCategory",
-  "MultiSummaryToSingle": "MultiSummaryToSingle",
-  "WithSpace":"WithSpace"
+  "ParentCategory.DisplayName": "ParentCategory"
 }

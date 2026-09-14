@@ -1,4 +1,4 @@
-﻿using CodeAssistant.Services;
+﻿﻿using CodeAssistant.Services;
 
 using Microsoft;
 using Microsoft.VisualStudio.Extensibility;
@@ -9,36 +9,34 @@ using Microsoft.VisualStudio.RpcContracts.RemoteUI;
 
 namespace CodeAssistant.ToolWindows;
 
-/// <summary>A sample tool window.</summary>
+/// <summary>CodeAssistant 主工具窗口。</summary>
 [VisualStudioContribution]
 public class MyToolWindow : ToolWindow
 {
-    private MyToolWindowVM? dataContext;
+    private readonly MyToolWindowVM _dataContext;
 
-    /// <summary>依赖注入了</summary>
-    /// <param name="settingsObserver"></param>
-    public MyToolWindow(Settings.ParentCategoryObserver settingsObserver,ConfigService configService)
+    /// <summary>通过 DI 注入 VM。构造函数必须为 public：
+    /// SDK 的 GeneratedToolWindowProvider 通过反射激活工具窗口，
+    /// internal 构造函数会导致激活失败，报 "Unregistered tool window"。</summary>
+    public MyToolWindow(MyToolWindowVM dataContext)
     {
-        Requires.NotNull(settingsObserver);
-        this.Title = "CodeAssistant Tool Window";
-        this.dataContext = new MyToolWindowVM(this.Extensibility, settingsObserver, configService);
+        Requires.NotNull(dataContext);
 
-        //await this.Extensibility.Shell().ShowToolWindowAsync<MyToolWindow>(activate: true, cancellationToken);
-        //using ServiceBrokerClient.Rental<IToolWindowManager> toolWindowManager = await base.ServiceBrokerClient.GetProxyAsync<IToolWindowManager>(VisualStudioServices.VS2022_3.ToolWindowManager, cancellationToken);
-        //Assumes.NotNull(toolWindowManager.Proxy);
-        //await toolWindowManager.Proxy.ShowAsync(toolWindowType.ToString(), activate, cancellationToken);
+        this.Title = "%CodeAssistant.DisplayName%";
+        _dataContext = dataContext;
     }
 
     /// <inheritdoc/>
     public override ToolWindowConfiguration ToolWindowConfiguration => new()
     {
-        // Use this object initializer to set optional parameters for the tool window.
-        Placement = ToolWindowPlacement.Floating,
+        Placement = ToolWindowPlacement.DocumentWell,
     };
 
     /// <inheritdoc/>
-    public override Task<IRemoteUserControl> GetContentAsync(CancellationToken cancellationToken)
+    public override async Task<IRemoteUserControl> GetContentAsync(CancellationToken cancellationToken)
     {
-        return Task.FromResult<IRemoteUserControl>(new MyToolWindowContent(this.dataContext));
+        // 在 UI 创建时异步加载配置，避免在构造函数中 sync-over-async
+        await _dataContext.InitializeAsync(cancellationToken);
+        return new MyToolWindowContent(_dataContext);
     }
 }

@@ -1,12 +1,16 @@
-﻿using CodeAssistant.Settings;
+﻿﻿﻿﻿using CodeAssistant.Settings;
 
 namespace CodeAssistant.Helpers;
 
 internal static class FormatHelper
 {
-    public static string CodeFormat(string text)
+    /// <summary>对 C# 源代码进行格式化（summary 注释压缩 + 多余空行清理）。</summary>
+    public static string CodeFormat(string text, CommentSetting commentSetting)
     {
-        text = CommentFormatter.FormatSummaryToSingleLine(text);
+        if (commentSetting.MultiSummaryToSingle)
+        {
+            text = CommentFormatter.FormatSummaryToSingleLine(text, commentSetting.WithSpace);
+        }
 
         text = PlainTextFormatter.RemoveExtraBlankLines(text, 1);
 

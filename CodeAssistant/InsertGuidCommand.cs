@@ -1,6 +1,4 @@
-﻿using CodeAssistant.Services;
-
-using Microsoft;
+﻿﻿﻿﻿using Microsoft;
 using Microsoft.VisualStudio.Extensibility;
 using Microsoft.VisualStudio.Extensibility.Commands;
 using Microsoft.VisualStudio.Extensibility.Editor;
@@ -9,39 +7,31 @@ using System.Diagnostics;
 using System.Globalization;
 
 namespace CodeAssistant;
+
 #pragma warning disable VSEXTPREVIEW_OUTPUTWINDOW
 
-/// <summary>Command1 handler.</summary>
+/// <summary>在当前光标位置插入一个新的 GUID（默认带连字符的 D 格式）。</summary>
 [VisualStudioContribution]
 internal class InsertGuidCommand : Command
 {
-    private readonly TraceSource logger;
-    ConfigService ConfigService;
-    /// <summary>Initializes a new instance of the <see cref="InsertGuidCommand"/> class.</summary>
-    /// <param name="traceSource">Trace source instance to utilize.</param>
-    public InsertGuidCommand(TraceSource traceSource, ConfigService configService)
-    {
-        // This optional TraceSource can be used for logging in the command. You can use dependency
-        // injection to access other services here as well.
-        this.logger = Requires.NotNull(traceSource, nameof(traceSource));
+    private readonly TraceSource _logger;
 
-        ConfigService = Requires.NotNull(configService);
+    public InsertGuidCommand(TraceSource traceSource)
+    {
+        _logger = Requires.NotNull(traceSource, nameof(traceSource));
     }
 
     /// <inheritdoc/>
     public override CommandConfiguration CommandConfiguration => new("%InsertGuidCommand.DisplayName%")
     {
-        // Use this object initializer to set optional parameters for the command. The required
-        // parameter, displayName, is set above. DisplayName is localized and references an entry in .vsextension\string-resources.json.
         Icon = new(ImageMoniker.KnownValues.Extension, IconSettings.IconAndText),
-        //Placements = [CommandPlacement.KnownPlacements.ExtensionsMenu],
-        VisibleWhen = ActivationConstraint.ClientContext(ClientContextKey.Shell.ActiveEditorContentType, ".+")
+        // 仅在编辑器打开文件时可用（避免 ClientContext 约束，原因见 FormatCodeCommand）
+        EnabledWhen = ActivationConstraint.EditorContentType("any"),
     };
 
     /// <inheritdoc/>
     public override Task InitializeAsync(CancellationToken cancellationToken)
     {
-        // Use InitializeAsync for any one-time setup or initialization.
         return base.InitializeAsync(cancellationToken);
     }
 
@@ -49,26 +39,33 @@ internal class InsertGuidCommand : Command
     public override async Task ExecuteCommandAsync(IClientContext context, CancellationToken cancellationToken)
     {
         Requires.NotNull(context, nameof(context));
-        var newGuidString = Guid.NewGuid().ToString("N", CultureInfo.CurrentCulture);
+
+        // D 格式：xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx，是 VS 中最常见的 GUID 形式
+        var newGuidString = Guid.NewGuid().ToString("D", CultureInfo.InvariantCulture);
 
         using var textView = await context.GetActiveTextViewAsync(cancellationToken);
         if (textView is null)
         {
-            this.logger.TraceInformation("There was no active text view when command is executed.");
+            _logger.TraceInformation("There was no active text view when command is executed.");
             return;
         }
-        await ExtensionEntrypoint.outputChannel!.WriteLineAsync("This is a test of the output channel.");
 
         await this.Extensibility.Editor().EditAsync(
             batch =>
             {
                 var editor = textView.Document.AsEditable(batch);
-                //// specify the desired changes here:
-                //editor.Replace(textView.Selection.Extent, newGuidString);
 
-                var caret = textView.Selection.Extent.Start;
+                // 记录选区起点（插入位置）。Replace 后默认光标会移动到新文本末尾，
+                // 这里显式把光标设置到 GUID 之后，语义更直观。
+                var insertStart = textView.Selection.Extent.Start;
+                var afterGuid = insertStart + newGuidString.Length;
+
+                // 替换当前选区（若无选区则在光标处插入）
                 editor.Replace(textView.Selection.Extent, newGuidString);
-                textView.AsEditable(batch).SetSelections([new Selection(activePosition: caret, anchorPosition: caret, insertionPosition: caret)]);
+
+                // 把光标移到插入的 GUID 之后
+                textView.AsEditable(batch).SetSelections(
+                    [new Selection(activePosition: afterGuid, anchorPosition: afterGuid, insertionPosition: afterGuid)]);
             },
             cancellationToken);
     }
